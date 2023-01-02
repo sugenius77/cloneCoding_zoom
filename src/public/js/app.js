@@ -83,8 +83,16 @@ function handleCameraClick() {
     cameraOff = true;
   }
 }
+
 async function handleCameraChange() {
-  getMedia(cameraSelect.value);
+  await getMedia(cameraSelect.value);
+  if (myPeerConnection) {
+    const videoTrack = myStream.getAudioTracks()[0];
+    const videoSender = myPeerConnection
+      .getSenders()
+      .find((sender) => sender.track.kind === "video");
+    videoSender.replaceTrack(videoTrack);
+  }
 }
 muteBtn.addEventListener("click", handleMuteClick);
 cameraBtn.addEventListener("click", handleCameraClick);
